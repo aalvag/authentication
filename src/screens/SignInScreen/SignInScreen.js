@@ -10,18 +10,25 @@ import Logo from '../../components/Logo';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
+import {useNavigation} from '@react-navigation/native';
 
 const SignInScreen = () => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+
   const {height} = useWindowDimensions();
+  const navigation = useNavigation();
 
   const onSignIn = () => {
-    console.warn('Sign in');
+    navigation.navigate('Home');
   };
 
   const onForgotPassword = () => {
-    console.warn('Forgot password');
+    navigation.navigate('ForgotPassword');
+  };
+
+  const onSignUp = () => {
+    navigation.navigate('SignUp');
   };
 
   return (
@@ -54,7 +61,7 @@ const SignInScreen = () => {
         <SocialSignInButtons />
         <CustomButton
           text="Don't have an account? Create one"
-          onPress={onForgotPassword}
+          onPress={onSignUp}
           type="terciary"
         />
       </View>
