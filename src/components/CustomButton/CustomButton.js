@@ -41,14 +41,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#61DAFB',
   },
   container_secondary: {
-    backgroundColor: '#0f0',
+    borderWidth: 2,
+    borderColor: '#61DAFB',
   },
   container_terciary: {},
   text_primary: {
     color: '#fff',
   },
   text_secondary: {
-    color: '#000',
+    color: '#61DAFB',
   },
   text_terciary: {
     color: 'gray',
