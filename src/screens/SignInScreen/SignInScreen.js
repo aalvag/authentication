@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   useWindowDimensions,
   ScrollView,
@@ -10,6 +9,7 @@ import {
 import Logo from '../../components/Logo';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
+import SocialSignInButtons from '../../components/SocialSignInButtons';
 
 const SignInScreen = () => {
   const [username, setUsername] = React.useState('');
@@ -22,18 +22,6 @@ const SignInScreen = () => {
 
   const onForgotPassword = () => {
     console.warn('Forgot password');
-  };
-
-  const onSignInFacebook = () => {
-    console.warn('Sign in with Facebook');
-  };
-
-  const onSignInGoogle = () => {
-    console.warn('Sign in with Google');
-  };
-
-  const onSignInApple = () => {
-    console.warn('Sign in with Apple');
   };
 
   return (
@@ -63,24 +51,7 @@ const SignInScreen = () => {
           onPress={onForgotPassword}
           type="terciary"
         />
-        <CustomButton
-          text="Sign In with Facebook"
-          onPress={onSignInFacebook}
-          bgColor="#e7eaf4"
-          fgColor="#4765a9"
-        />
-        <CustomButton
-          text="Sign In with Google"
-          onPress={onSignInGoogle}
-          bgColor="#fae9ea"
-          fgColor="#dd4d44"
-        />
-        <CustomButton
-          text="Sign In with Apple"
-          onPress={onSignInApple}
-          bgColor="#e3e3e3"
-          fgColor="#363636"
-        />
+        <SocialSignInButtons />
         <CustomButton
           text="Don't have an account? Create one"
           onPress={onForgotPassword}

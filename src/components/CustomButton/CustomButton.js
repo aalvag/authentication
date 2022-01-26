@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   container_primary: {
-    backgroundColor: '#00f',
+    backgroundColor: '#61DAFB',
   },
   container_secondary: {
     backgroundColor: '#0f0',
