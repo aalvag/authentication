@@ -5,14 +5,14 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 
 import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 
 const NewPasswordScreen = () => {
-  const [code, setCode] = React.useState('');
-  const [newPassword, setNewPassword] = React.useState('');
-
   const navigation = useNavigation();
+  const {control, handleSubmit} = useForm();
 
-  const onSubmit = () => {
+  const onSubmit = data => {
+    console.log(data);
     navigation.navigate('Home');
   };
 
@@ -24,13 +24,27 @@ const NewPasswordScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Reset your password</Text>
-        <CustomInput placeholder="Code" value={code} setValue={setCode} />
+        <CustomInput
+          placeholder="Code"
+          name="code"
+          control={control}
+          rules={{
+            required: 'Code is required',
+          }}
+        />
         <CustomInput
           placeholder="Enter new password"
-          value={newPassword}
-          setValue={setNewPassword}
+          name="newPassword"
+          control={control}
+          rules={{
+            required: 'Password is required',
+            minLength: {
+              value: 6,
+              message: 'Password must be at least 6 characters',
+            },
+          }}
         />
-        <CustomButton text="Submit" onPress={onSubmit} />
+        <CustomButton text="Submit" onPress={handleSubmit(onSubmit)} />
         <CustomButton
           text="Back to Sign in"
           onPress={onSignIn}

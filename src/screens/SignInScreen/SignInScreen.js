@@ -11,15 +11,20 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 
 const SignInScreen = () => {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
 
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
 
-  const onSignIn = () => {
+  const onSignIn = data => {
+    console.log(data);
     navigation.navigate('Home');
   };
 
@@ -42,17 +47,27 @@ const SignInScreen = () => {
           style={[styles.logo, {height: height * 0.3}]}
         /> */}
         <CustomInput
+          name="username"
+          control={control}
           placeholder="Usename"
-          value={username}
-          setValue={setUsername}
+          rules={{
+            required: 'Username is required',
+          }}
         />
         <CustomInput
+          name="password"
+          control={control}
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
           secureTextEntry
+          rules={{
+            required: 'Password is required',
+            minLength: {
+              value: 6,
+              message: 'Password must be at least 6 characters',
+            },
+          }}
         />
-        <CustomButton text="Sign In" onPress={onSignIn} />
+        <CustomButton text="Sign In" onPress={handleSubmit(onSignIn)} />
         <CustomButton
           text="Forgot password?"
           onPress={onForgotPassword}
