@@ -1,18 +1,34 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import {useForm} from 'react-hook-form';
+import {Auth} from 'aws-amplify';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
   const {control, handleSubmit, watch} = useForm();
 
-  const onRegister = data => {
-    console.warn(data);
-    // navigation.navigate('ConfirmEmail');
+  const onRegister = async data => {
+    try {
+      const response = await Auth.signUp({
+        username: data.username,
+        password: data.password,
+        attributes: {
+          email: data.email,
+          name: data.name,
+          preferred_username: data.username,
+        },
+      });
+      navigation.navigate('ConfirmEmail', {
+        username: data.username,
+      });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', error.message);
+    }
   };
 
   const onSignIn = () => {
@@ -30,6 +46,14 @@ const SignUpScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Create an account</Text>
+        <CustomInput
+          placeholder="Name"
+          name="name"
+          control={control}
+          rules={{
+            required: 'Name is required',
+          }}
+        />
         <CustomInput
           placeholder="Usename"
           name="username"

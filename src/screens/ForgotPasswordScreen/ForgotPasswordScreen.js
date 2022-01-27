@@ -1,18 +1,25 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
+import {Auth} from 'aws-amplify';
 
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const {control, handleSubmit} = useForm();
 
-  const onSend = data => {
-    console.warn(data);
-    navigation.navigate('NewPassword');
+  const onSend = async data => {
+    console.log(data);
+    try {
+      await Auth.forgotPassword(data.username);
+      Alert.alert('Success', 'Code was sent to your email');
+      navigation.navigate('NewPassword');
+    } catch (e) {
+      Alert.alert('Oops', e.message);
+    }
   };
 
   const onSignIn = () => {
@@ -31,10 +38,10 @@ const ForgotPasswordScreen = () => {
             required: 'Username is required',
           }}
         />
-        <CustomButton text="Send" onPress={onSend} />
+        <CustomButton text="Send" onPress={handleSubmit(onSend)} />
         <CustomButton
           text="Back to Sign in"
-          onPress={handleSubmit(onSignIn)}
+          onPress={onSignIn}
           type="terciary"
         />
       </View>

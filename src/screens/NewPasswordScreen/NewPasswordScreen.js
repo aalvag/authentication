@@ -1,19 +1,29 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
+import {Auth} from 'aws-amplify';
 
 const NewPasswordScreen = () => {
   const navigation = useNavigation();
   const {control, handleSubmit} = useForm();
 
-  const onSubmit = data => {
-    console.log(data);
-    navigation.navigate('Home');
+  const onSubmit = async data => {
+    try {
+      await Auth.forgotPasswordSubmit(
+        data.username,
+        data.code,
+        data.newPassword,
+      );
+      navigation.navigate('SignIn');
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', error.message);
+    }
   };
 
   const onSignIn = () => {
@@ -24,6 +34,14 @@ const NewPasswordScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Reset your password</Text>
+        <CustomInput
+          placeholder="Username"
+          name="username"
+          control={control}
+          rules={{
+            required: 'Username is required',
+          }}
+        />
         <CustomInput
           placeholder="Code"
           name="code"
@@ -43,6 +61,7 @@ const NewPasswordScreen = () => {
               message: 'Password must be at least 6 characters',
             },
           }}
+          secureTextEntry
         />
         <CustomButton text="Submit" onPress={handleSubmit(onSubmit)} />
         <CustomButton

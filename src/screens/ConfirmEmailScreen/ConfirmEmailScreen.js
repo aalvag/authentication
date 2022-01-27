@@ -1,31 +1,56 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
-
+import {Auth} from 'aws-amplify';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 
 const ConfirmEmailScreen = () => {
-  const {control, handleSubmit} = useForm();
+  const route = useRoute();
+  const navigation = useNavigation();
 
-  const onConfirmCode = data => {
-    console.warn(data);
-    navigation.navigate('Home');
+  const {control, handleSubmit, watch} = useForm({
+    defaultValues: {username: route?.params?.username},
+  });
+
+  const username = watch('username');
+
+  const onConfirmCode = async data => {
+    try {
+      await Auth.confirmSignUp(data.username, data.code);
+      navigation.navigate('SignIn');
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', error.message);
+    }
   };
 
   const onSignIn = () => {
     navigation.navigate('SignIn');
   };
 
-  const onResendCode = () => {
-    console.warn('Resend code');
+  const onResendCode = async () => {
+    try {
+      await Auth.resendSignUp(username);
+      Alert.alert('Success', 'Code was resent to your email');
+    } catch (e) {
+      Alert.alert('Oops', e.message);
+    }
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Confirm your Email </Text>
+        <CustomInput
+          name="username"
+          control={control}
+          placeholder="Username"
+          rules={{
+            required: 'Username code is required',
+          }}
+        />
         <CustomInput
           placeholder="Enter your confirmation code"
           name="code"
